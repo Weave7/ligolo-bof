@@ -2,9 +2,13 @@
 *.dll
 *.so
 *.h
+*.exe
 
 # Go build artifacts
-*.exe
+*.test
+*.out
+*.prof
+vendor/
 
 # Sliver client stuff
 *.sliver-client
