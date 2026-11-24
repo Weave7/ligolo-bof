@@ -10,14 +10,25 @@ echo "Setting up ligolo-ng-bof extension in: $EXTENSIONS_DIR"
 echo "Source directory: $PROJECT_DIR"
 echo ""
 
+set -Eeuo pipefail
+
+require_command() {
+    if ! command -v "$1" >/dev/null 2>&1; then
+        echo "ERROR: Required command not found: $1" >&2
+        exit 1
+    fi
+}
+
+require_command go
+require_command make
+require_command gcc
+require_command make
+
 # Build extension first
-echo "Building extension..."
-if command -v make &> /dev/null; then
-    make clean all windowsdll_64 windowsdll_32
-else
-    echo "  ⚠ Warning: make not found. Assuming binaries are already built."
+if ! make clean all windowsdll_64 windowsdll_32; then
+    echo "ERROR: Build failed. Aborting installation."
+    exit 1
 fi
-echo ""
 
 # Ensure extensions directory exists
 mkdir -p "$EXTENSIONS_DIR"
